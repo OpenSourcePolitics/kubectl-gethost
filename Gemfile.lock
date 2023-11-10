@@ -11,6 +11,7 @@ GEM
       activesupport (~> 6.1)
       faraday (~> 2.7)
     base64 (0.1.1)
+    byebug (11.1.3)
     concurrent-ruby (1.2.2)
     faraday (2.7.11)
       base64
@@ -31,6 +32,7 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   airbyte-ruby
+  byebug
 
 BUNDLED WITH
    2.4.9
