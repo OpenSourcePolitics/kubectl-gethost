@@ -2,15 +2,14 @@
 
 require 'open3'
 require "yaml"
-require "byebug"
 require_relative "lib/kubectl"
 require_relative "lib/kube_host"
-require "airbyte_ruby"
 
 host = ARGV[0]
 
 if host.nil? || host.empty?
   puts "No hosts requested, end of process !"
+  puts "Usage: ./main.rb <host>"
   return
 end
 
@@ -24,8 +23,7 @@ unless syscmd.status.success?
   return
 end
 
-hosts = JSON.parse(syscmd.stdout)&.fetch("items", [])
-hosts = hosts.map { |host| Lib::KubeHost.from_hash(host) }
+hosts = JSON.parse(syscmd.stdout)&.fetch("items", []).map { |item| Lib::KubeHost.from_hash(item) }
 targets = hosts.select { |format| host.include?(format.host) }
 
 if targets.empty?
