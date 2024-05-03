@@ -12,6 +12,12 @@ module Lib
       kubectl_exec!(cmd)
     end
 
+    def self.get_secret_for(kube_host)
+      puts "Retrieving custom env..."
+      cmd = "kubectl get secret #{kube_host.decidim_name}-custom-env -n #{kube_host.namespace} -o jsonpath='{.data}'"
+      kubectl_exec!(cmd)
+    end
+
     private
 
     def self.kubectl_exec!(cmd)

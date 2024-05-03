@@ -33,4 +33,7 @@ end
 
 targets.each do |target|
   target.print
+  puts "Retrieving custom env..."
+  syscmd = Lib::Kubectl.get_secret_for(target)
+  puts syscmd.stdout
 end
