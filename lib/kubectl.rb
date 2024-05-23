@@ -9,13 +9,13 @@ module Lib
     def self.get_hosts
       puts "Retrieving all hosts..."
       cmd = "kubectl get decidim --all-namespaces -o json"
-      kubectl_exec!(cmd)
+      self.kubectl_exec!(cmd)
     end
 
-    def self.get_secret_for(kube_host)
+    def get_secrets_cmd
       puts "Retrieving custom env..."
-      cmd = "kubectl get secret #{kube_host.decidim_name}-custom-env -n #{kube_host.namespace} -o jsonpath='{.data}'"
-      kubectl_exec!(cmd)
+      cmd = "kubectl get secret #{self.decidim_name}-custom-env -n #{self.namespace} -o jsonpath='{.data}'"
+      Lib::Kubectl.kubectl_exec!(cmd)
     end
 
     private

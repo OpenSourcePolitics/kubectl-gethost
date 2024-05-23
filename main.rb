@@ -2,10 +2,16 @@
 
 require 'open3'
 require "yaml"
+require "base64"
+require "uri"
 require_relative "lib/kubectl"
 require_relative "lib/kube_host"
 
-host = ARGV[0]
+host = if URI.parse(ARGV[0]).is_a?(URI::Generic)
+         ARGV[0]
+       else
+         URI.parse(ARGV[0]).host
+       end
 
 if host.nil? || host.empty?
   puts "No hosts requested, end of process !"
@@ -33,7 +39,4 @@ end
 
 targets.each do |target|
   target.print
-  puts "Retrieving custom env..."
-  syscmd = Lib::Kubectl.get_secret_for(target)
-  puts syscmd.stdout
 end
