@@ -7,16 +7,46 @@ require "uri"
 require_relative "lib/kubectl"
 require_relative "lib/kube_host"
 
-host = if URI.parse(ARGV[0]).is_a?(URI::Generic)
+def flags(args)
+  flags = {}
+
+  args.each do |arg|
+    case arg
+    when "--help", "-h"
+      puts "Usage: kubectl-gethost <host>
+
+OPTIONS:
+
+  --help, -h: Show this help message
+  --secrets, -s: Show secrets for the host
+"
+      exit
+    when "--secrets", "-s"
+      flags[:secrets] = true
+    end
+  end
+
+  flags
+end
+
+host = if URI.parse(ARGV[0] || "").is_a?(URI::Generic)
          ARGV[0]
        else
          URI.parse(ARGV[0]).host
        end
 
+flags = flags(ARGV)
+
 if host.nil? || host.empty?
   puts "No hosts requested, end of process !"
-  puts "Usage: ./main.rb <host>"
-  return
+  puts "Usage: kubectl-gethost <host>
+
+OPTIONS:
+
+  --help, -h: Show this help message
+  --secrets, -s: Show secrets for the host
+"
+  exit
 end
 
 puts "Looking for Kubernetes host..."
@@ -39,4 +69,5 @@ end
 
 targets.each do |target|
   target.print
+  target.get_secrets if flags[:secrets]
 end
