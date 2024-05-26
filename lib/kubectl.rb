@@ -18,6 +18,20 @@ module Lib
       Lib::Kubectl.kubectl_exec!(cmd)
     end
 
+    def set_maintenance_pod_cmd(duration = 30)
+      puts "Creating a new maintenance pod..."
+      puts "> Duration: #{duration} minutes"
+      cmd = "kubectl annotate decidim -n #{self.namespace} #{self.decidim_name} decidim.libre.sh/maintenance=#{duration}"
+      puts "> #{cmd}"
+
+      puts "Do you want to continue ? (y/n)"
+      answer = STDIN.gets.chomp
+      if answer != "y" || answer != "yes" || answer != "Y" || answer != "Yes"
+        return OpenStruct.new(stderr: "Aborted !")
+      end
+      Lib::Kubectl.kubectl_exec!(cmd)
+    end
+
     private
 
     def self.kubectl_exec!(cmd)

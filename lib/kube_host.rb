@@ -33,6 +33,17 @@ Version: #{version}
       end
     end
 
+    def set_maintainance_pod(duration = 30)
+      cmd = self.set_maintenance_pod_cmd(duration)
+      if !cmd.stderr.nil?
+        puts cmd.stderr
+        return
+      else
+          puts cmd.stdout
+          puts "Maintenance pod created !"
+      end
+    end
+
     private
 
     def github_url

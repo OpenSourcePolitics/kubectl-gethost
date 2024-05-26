@@ -19,10 +19,20 @@ OPTIONS:
 
   --help, -h: Show this help message
   --secrets, -s: Show secrets for the host
+  --interactive, -i: Set a maintenance pod for the host
+  --duration, -d: Set a duration for the maintenance pod
 "
       exit
     when "--secrets", "-s"
       flags[:secrets] = true
+    when "--interactive", "-i"
+      flags[:maintainance] = true
+    when "--duration", "-d"
+      flags[:duration] = args[args.index(arg) + 1].to_i
+      if flags[:duration].nil? || flags[:duration] <= 0
+        puts "Duration must be a positive integer"
+        exit
+      end
     end
   end
 
@@ -45,6 +55,8 @@ OPTIONS:
 
   --help, -h: Show this help message
   --secrets, -s: Show secrets for the host
+  --interactive, -i: Set a maintenance pod for the host
+  --duration, -d: Set a duration for the maintenance pod
 "
   exit
 end
@@ -70,4 +82,6 @@ end
 targets.each do |target|
   target.print
   target.get_secrets if flags[:secrets]
+  duration = flags[:duration] || 30
+  target.set_maintainance_pod(duration) if flags[:maintainance]
 end
