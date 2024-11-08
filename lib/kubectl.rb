@@ -28,8 +28,11 @@ module Lib
 
       puts 'Do you want to continue ? (y/n)'
       answer = $stdin.gets.chomp
-      return OpenStruct.new(stderr: 'Aborted !') if answer != 'y' || answer != 'yes' || answer != 'Y' || answer != 'Yes'
+      return OpenStruct.new(stderr: 'Aborted !') if answer != 'y' && answer != 'yes' && answer != 'Y' && answer != 'Yes'
 
+      puts "> Executing: #{cmd}"
+      puts "Creating a maintenance pod for #{duration} minutes in namespace #{namespace} for host #{host}...
+Pod will be deleted the #{(Time.now + duration).strftime("%d/%m/%Y at %H:%M")}"
       Lib::Kubectl.kubectl_exec!(cmd)
     end
 
